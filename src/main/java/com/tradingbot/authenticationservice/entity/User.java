@@ -6,7 +6,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users")
+@Table(name="users",
+        uniqueConstraints = {@UniqueConstraint(
+                name = "email_unique",
+                columnNames = {"email"} )
+})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String email;
     @Column(nullable = false, length = 50)
     private String name;

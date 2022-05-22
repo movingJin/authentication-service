@@ -23,15 +23,18 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void createUser(UserDto userDto) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        User user = mapper.map(userDto, User.class);
-        user.setUserId(UUID.randomUUID().toString());
-        user.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
-        user.setCreatedAt(LocalDateTime.now());
-
-        userRepository.save(user);
+    public User createUser(UserDto userDto) {
+        User user = null;
+        if(userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
+            ModelMapper mapper = new ModelMapper();
+            mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            user = mapper.map(userDto, User.class);
+            user.setUserId(UUID.randomUUID().toString());
+            user.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
+            user.setCreatedAt(LocalDateTime.now());
+            userRepository.save(user);
+        }
+        return user;
     }
 
     @Override

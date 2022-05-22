@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.tradingbot.authenticationservice.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -31,15 +32,18 @@ public class UserController {
                 , env.getProperty("local.server.port"));
     }
 
-    @PostMapping("/users")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody UserDto requestUser) {
+    @RequestMapping(value ="/users", method = RequestMethod.POST)
+    public ResponseEntity<String> createUser(@RequestBody UserDto requestUser) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         UserDto userDto = mapper.map(requestUser, UserDto.class);
-        userService.createUser(userDto);
-
+        User createdUser = userService.createUser(userDto);
+        if(createdUser != null){
+            return new ResponseEntity<>("success", HttpStatus.CREATED);
+        }else{
+            return new ResponseEntity<>("email is already exists", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/users")
