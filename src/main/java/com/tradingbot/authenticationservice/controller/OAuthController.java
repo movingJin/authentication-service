@@ -22,16 +22,6 @@ import java.util.Map;
 @RequestMapping("/oauth")
 public class OAuthController {
     private final OAuthService accountService;
-//    @PostMapping("/login")
-//    public String oauthLoginInfo(Authentication authentication){
-//        log.debug(authentication.toString());
-//        //oAuth2User.toString() 예시 : Name: [2346930276], Granted Authorities: [[USER]], User Attributes: [{id=2346930276, provider=kakao, name=김준우, email=bababoll@naver.com}]
-//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-//        //attributes.toString() 예시 : {id=2346930276, provider=kakao, name=김준우, email=bababoll@naver.com}
-//        log.debug(oAuth2User.getAttributes().toString());
-//        Map<String, Object> attributes = oAuth2User.getAttributes();
-//        return attributes.toString();
-//    }
 
     @PostMapping("/login")
     public ResponseEntity LoginWithGoogleOauth2(@RequestBody IdTokenRequestDto requestBody, HttpServletResponse response) {
