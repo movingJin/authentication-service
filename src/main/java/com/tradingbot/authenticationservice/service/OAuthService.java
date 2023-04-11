@@ -71,7 +71,7 @@ public class OAuthService {
         return existingUser;
     }
 
-    private User verifyIDToken(String idToken) {
+    public User verifyIDToken(String idToken) {
         try {
             GoogleIdToken idTokenObj = verifier.verify(idToken);
             if (idTokenObj == null) {
