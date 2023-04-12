@@ -30,10 +30,10 @@ public class OAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> LoginWithGoogleOauth2(@RequestBody IdTokenRequestDto requestBody, HttpServletResponse response) {
-        User user = accountService.verifyIDToken(requestBody.getIdToken());
+        UserDto userDto = accountService.loginOAuthGoogle(requestBody);
 
-        if(user != null){
-            return ResponseEntity.status(HttpStatus.OK).body(new ModelMapper().map(user, UserDto.class));
+        if(userDto != null){
+            return ResponseEntity.status(HttpStatus.OK).body(userDto);
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
