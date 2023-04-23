@@ -60,14 +60,35 @@ public class OAuthService {
     }
 
     public UserDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        User user = verifyIDToken(requestBody.getIdToken());
-        if (user == null) {
+        UserDto userDto;
+        User verifiedUser = verifyIDToken(requestBody.getIdToken());
+        if (verifiedUser == null) {
             throw new IllegalArgumentException();
         }
-        user = createOrUpdateUser(user);
-        UserDto userDto = new ModelMapper().map(user, UserDto.class);
-        oAuthUserRepository.findByUserId(user.getUserId()).ifPresent(oAuthUser -> userDto.setPassword(oAuthUser.getPassword()));
+
+        User existingUser = userRepository.findByEmail(verifiedUser.getEmail()).orElse(null);
+        if (existingUser != null) {
+            userDto = new ModelMapper().map(existingUser, UserDto.class);
+            oAuthUserRepository.findByUserId(existingUser.getUserId()).ifPresent(oAuthUser -> userDto.setPassword(oAuthUser.getPassword()));
+        }else {
+            userDto = new ModelMapper().map(verifiedUser, UserDto.class);
+        }
         return userDto;
+    }
+
+    @Transactional
+    public User createUser(UserDto userDto) {
+        OAuthUser oAuthUser = new OAuthUser(UUID.randomUUID().toString(), getRamdomPassword(10));
+
+        User user = new ModelMapper().map(userDto, User.class);
+        user.setUserId(oAuthUser.getUserId());
+        user.setEncryptedPwd(passwordEncoder.encode(oAuthUser.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
+
+        oAuthUserRepository.save(oAuthUser);
+        userRepository.save(user);
+
+        return user;
     }
 
     @Transactional
