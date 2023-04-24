@@ -91,25 +91,6 @@ public class OAuthService {
         return user;
     }
 
-    @Transactional
-    public User createOrUpdateUser(User user) {
-        User existingUser = userRepository.findByEmail(user.getEmail()).orElse(null);
-        if (existingUser == null) {
-            OAuthUser oAuthUser = new OAuthUser(UUID.randomUUID().toString(), getRamdomPassword(10));
-
-            user.setUserId(oAuthUser.getUserId());
-            user.setEncryptedPwd(passwordEncoder.encode(oAuthUser.getPassword()));
-            user.setCreatedAt(LocalDateTime.now());
-
-            oAuthUserRepository.save(oAuthUser);
-            userRepository.save(user);
-            return user;
-        }
-        existingUser.setName(user.getName());
-        userRepository.save(existingUser);
-        return existingUser;
-    }
-
     private String getRamdomPassword(int size) {
         char[] charSet = new char[] {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',

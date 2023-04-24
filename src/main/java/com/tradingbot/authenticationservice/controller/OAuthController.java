@@ -36,7 +36,7 @@ public class OAuthController {
         if(userDto.getUserId() != null){
             return ResponseEntity.status(HttpStatus.OK).body(userDto);
         }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userDto);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userDto);
         }
     }
 
