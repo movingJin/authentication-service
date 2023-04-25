@@ -69,9 +69,11 @@ public class OAuthService {
         User existingUser = userRepository.findByEmail(verifiedUser.getEmail()).orElse(null);
         if (existingUser != null) {
             userDto = new ModelMapper().map(existingUser, UserDto.class);
+            userDto.setStatus("SUCCESS");
             oAuthUserRepository.findByUserId(existingUser.getUserId()).ifPresent(oAuthUser -> userDto.setPassword(oAuthUser.getPassword()));
         }else {
             userDto = new ModelMapper().map(verifiedUser, UserDto.class);
+            userDto.setStatus("NO_USER");
         }
         return userDto;
     }

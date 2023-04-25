@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 @Data
 public class UserDto {
 
+    private String status;
+
     @NotNull(message = "Email cannot be null")
     @Size(min = 2, message ="Email not be less than two characters")
     @Email

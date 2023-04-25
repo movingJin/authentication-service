@@ -33,11 +33,7 @@ public class OAuthController {
     public ResponseEntity<UserDto> LoginWithGoogleOauth2(@RequestBody IdTokenRequestDto requestBody, HttpServletResponse response) {
         UserDto userDto = accountService.loginOAuthGoogle(requestBody);
 
-        if(userDto.getUserId() != null){
-            return ResponseEntity.status(HttpStatus.OK).body(userDto);
-        }else{
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userDto);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PostMapping("/create")
